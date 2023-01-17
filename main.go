@@ -30,7 +30,7 @@ func main() {
 
 	fmt.Println("test")
 	for _, pod := range podList.Items {
-		fmt.Println(pod.Name, pod.Namespace)
+		fmt.Println(pod.Name, pod.Namespace, pod.Spec)
 
 	}
 
