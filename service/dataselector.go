@@ -1,6 +1,7 @@
 package service
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	"sort"
 	"strings"
 	"time"
@@ -91,8 +92,49 @@ func (d *dataSelector) Filter() *dataSelector {
 		}
 		// 将过滤好的数据写入
 		d.GenericDatalist = filterArray
-		return d
+	}
+	return d
+}
 
+// 分页逻辑  根据limit 和 page的传参，取一定范围内的数据
+
+func (d *dataSelector) Paginate() *dataSelector {
+	// 根据limit和page的入参，定义快捷变量
+
+	limit := d.DataSelect.Paginate.Limit
+	page := d.DataSelect.Paginate.Page
+	// 检验参数的合法性
+	if limit <= 0 || page <= 0 {
+		return d
 	}
 
+	//定义取数范围需要的 startIndes 和 endIndex
+
+	// 1 , 10  ,11 20  21 end
+	startIndex := limit * (page - 1)
+	endIndex := limit*page - 1
+
+	// 处理endIndex，当endIndex大于数组长度,让endIndex等于数组长度
+	if endIndex > len(d.GenericDatalist) {
+		endIndex = len(d.GenericDatalist) - 1
+	}
+	// 分段号的数据
+	d.GenericDatalist = d.GenericDatalist[startIndex:endIndex]
+	return d
+}
+
+// 定义podCell ,重写GetCreation 和 GetName方法，可以进行数据转换
+type podCell corev1.Pod
+
+// covev1.pod > podCell > DataCell
+// appsv1.deployment > deployCell > DataCell
+
+// 重写DataCell 接口的两个方法
+
+func (p podCell) GetCreation() time.Time {
+	return p.CreationTimestamp.Time
+}
+
+func (p podCell) GetName() string {
+	return p.Name
 }
