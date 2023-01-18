@@ -116,7 +116,7 @@ func (d *dataSelector) Paginate() *dataSelector {
 
 	// 处理endIndex，当endIndex大于数组长度,让endIndex等于数组长度
 	if endIndex > len(d.GenericDatalist) {
-		endIndex = len(d.GenericDatalist) - 1
+		endIndex = len(d.GenericDatalist)
 	}
 	// 分段号的数据
 	d.GenericDatalist = d.GenericDatalist[startIndex:endIndex]
