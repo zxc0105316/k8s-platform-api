@@ -42,6 +42,7 @@ func (k *k8s) Init() {
 	podList, err := clientset.CoreV1().Pods("kube-system").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		fmt.Println("clientset 获取pod列表失败," + err.Error())
+		logger.Info("k8s clientset 获取pods列表成功")
 	}
 
 	fmt.Println("test")
@@ -49,4 +50,5 @@ func (k *k8s) Init() {
 		fmt.Println(pod.Name, pod.Namespace, pod.Spec)
 
 	}
+	k.ClientSet = clientset
 }
