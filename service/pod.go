@@ -194,7 +194,7 @@ func (p *pod) GetPodLog(containerName, podName, namespace string) (log string, e
 
 }
 
-// 获取每个pod的内部容器数量
+// 获取每个namespace下的pod数量
 
 type PodsNp struct {
 	Namespace string
