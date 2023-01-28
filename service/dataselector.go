@@ -1,6 +1,7 @@
 package service
 
 import (
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"sort"
 	"strings"
@@ -137,4 +138,16 @@ func (p podCell) GetCreation() time.Time {
 
 func (p podCell) GetName() string {
 	return p.Name
+}
+
+// deployment
+
+type deploymentCell appsv1.Deployment
+
+func (d deploymentCell) GetCreation() time.Time {
+	return d.CreationTimestamp.Time
+}
+
+func (d deploymentCell) GetName() string {
+	return d.Name
 }

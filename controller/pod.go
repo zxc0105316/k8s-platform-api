@@ -21,7 +21,7 @@ func (p *pod) GetPods(ctx *gin.Context) {
 	//	处理入参
 	//  匿名结构体，用于定义入参，get请求为form格式，其他请求为json格式
 	params := new(struct {
-		FilterName string `form:"filter_name"`
+		FilterName string `form:"podName"`
 		Namespace  string `form:"namespace"`
 		Limit      int    `form:"limit"`
 		Page       int    `form:"page"`
@@ -95,12 +95,12 @@ func (p *pod) DeletePod(ctx *gin.Context) {
 	//	处理入参
 	//	构造匿名结构体,用于判断传入的参数
 	params := new(struct {
-		PodName   string `form:"podName"`
-		Namespace string `form:"namespace"`
+		PodName   string `json:"podName"`
+		Namespace string `json:"namespace"`
 	})
 
 	// form 方法使用Bind()方法，json方式使用shouldBindJSON方法
-	if err := ctx.Bind(params); err != nil {
+	if err := ctx.ShouldBind(params); err != nil {
 
 		logger.Error("删除pod: Bind绑定失败" + err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -130,12 +130,12 @@ func (p *pod) DeletePod(ctx *gin.Context) {
 func (p *pod) UpdatePod(ctx *gin.Context) {
 
 	params := new(struct {
-		podName   string `form:"podName"`
-		namespace string `form:"namespace"`
-		content   string `form:"content"`
+		podName   string `json:"podName"`
+		namespace string `json:"namespace"`
+		content   string `json:"content"`
 	})
 
-	if err := ctx.Bind(params); err != nil {
+	if err := ctx.ShouldBind(params); err != nil {
 
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 
