@@ -4,13 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
 	"k8s-platform-api/service"
-	v1 "k8s.io/api/core/v1"
 	"net/http"
 )
 
 // 处理ctx
 
-var Pod v1.Pod
+// 全局导出pod
+var Pod pod
 
 type pod struct {
 }
