@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/wonderivan/logger"
 	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -13,7 +14,20 @@ var Deployment deployment
 type deployment struct {
 
 }
+type DeployCreate struct {
+	Name string `json:"name"`
+	Namespace string `json:"namespace"`
+	Replicas int32 `json:"replicas"`
+	Image string `json:"image"`
+	Label map[string]string `json:"label"`
+	Cpu string `json:"cpu"`
+	Memory string `json:"memory"`
+	ContainerPort int32 `json:"container_port"`
+	HealthCheck bool `json:"health_check"`
+	HealthPath string `json:"health_pathe"`
 
+
+}
 
 // deployment 转 DataCells
 func (d *deployment) toCells (deployments []appsv1.Deployment)[]DataCell{
@@ -67,11 +81,7 @@ func (d *deployment) ScaleDeployment(deploymentName,namespace string,scaleNum in
 
 }
 
-
 // 创建deployment
-
-type DeployCreate metav1.ObjectMeta
-
 func (d *deployment) CreateDeployment(data *DeployCreate) (err error){
 
 //	 组装一个deployment yaml对应的数据类型
@@ -84,7 +94,22 @@ func (d *deployment) CreateDeployment(data *DeployCreate) (err error){
 		},
 	//	spec 中定义副本数，选择器，以及pod属性
 		Spec: appsv1.DeploymentSpec{
-			Replicas: &data.Replicas
+			Replicas: &data.Replicas,
+			Selector: &metav1.LabelSelector{
+				MatchLabels: data.Label,
+			},
+			Template: corev1.PodTemplateSpec{
+			// 定义pod名和标签
+				ObjectMeta: metav1.ObjectMeta{
+					Name: data.Name,
+					Labels: data.Label,
+				},
+			//	定义容器名，镜像和端口
+				Spec: corev1.PodSpec{
+					Containers:
+
+				}
+			}
 		}
 	}
 }
