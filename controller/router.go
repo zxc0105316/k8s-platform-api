@@ -22,8 +22,8 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 			})
 		}).
 		GET("/api/k8s/pod/log", Pod.GetPodLog).
-		GET("/api/k8s/pod/delete", Pod.DeletePod).
-		GET("/api/k8s/pod/update", Pod.UpdatePod).
+		POST("/api/k8s/pod/delete", Pod.DeletePod).
+		POST("/api/k8s/pod/update", Pod.UpdatePod).
 		GET("/api/k8s/pod/detail", Pod.GetPodDetail).
 		GET("/api/k8s/pod/ContainerList", Pod.GetPodContainer).
 		GET("/api/k8s/pod/NumberNp", Pod.GetPodNumberNp).
