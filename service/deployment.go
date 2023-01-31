@@ -307,7 +307,7 @@ func (d *deployment) GetDeployments(filterName, namespace string, limit, page in
 
 }
 
-// 获取pod详情
+// 获取deployment详情
 func (d *deployment) GetDeploymentsDetail(deploymentName, namespace string) (pod *appsv1.Deployment, err error) {
 	deployment, err := K8s.ClientSet.AppsV1().Deployments(namespace).Get(context.TODO(), deploymentName, metav1.GetOptions{})
 	if err != nil {
@@ -316,4 +316,36 @@ func (d *deployment) GetDeploymentsDetail(deploymentName, namespace string) (pod
 	}
 
 	return deployment, err
+}
+
+// 获取每个namespace下的deployment数量
+
+type DeploymentsNp struct {
+	Namespace     string
+	DeploymentNum int
+}
+
+func (d *deployment) GetDeploymentNumberNp() (deploymentsNps []*DeploymentsNp, err error) {
+
+	namespaceList, err := K8s.ClientSet.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, namespace := range namespaceList.Items {
+		//	获取pod列表
+		DeploymentList, err := K8s.ClientSet.AppsV1().Deployments(namespace.Name).List(context.TODO(), metav1.ListOptions{})
+		if err != nil {
+			return nil, err
+		}
+		//	 组装数据
+		deploymentsNp := &DeploymentsNp{
+			Namespace:     namespace.Name,
+			DeploymentNum: len(DeploymentList.Items),
+		}
+		//	 添加到podsNps数组中
+		deploymentsNps = append(deploymentsNps, deploymentsNp)
+	}
+
+	return deploymentsNps, nil
 }

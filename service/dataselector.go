@@ -151,3 +151,60 @@ func (d deploymentCell) GetCreation() time.Time {
 func (d deploymentCell) GetName() string {
 	return d.Name
 }
+
+// service
+
+type serviceCell corev1.Service
+
+func (s serviceCell) GetCreation() time.Time {
+	return s.CreationTimestamp.Time
+}
+
+func (s serviceCell) GetName() string {
+	return s.Name
+}
+
+// pv
+type pvtCell corev1.PersistentVolume
+
+func (pv pvtCell) GetCreation() time.Time {
+	return pv.CreationTimestamp.Time
+}
+
+func (pv pvtCell) GetName() string {
+	return pv.Name
+}
+
+// namespace
+type NamespaceCell corev1.Namespace
+
+func (n NamespaceCell) GetCreation() time.Time {
+	return n.CreationTimestamp.Time
+}
+
+func (n NamespaceCell) GetName() string {
+	return n.Name
+}
+
+// statefulset
+type statefulset appsv1.StatefulSet
+
+func (s statefulset) GetCreation() time.Time {
+	return s.CreationTimestamp.Time
+}
+
+func (s statefulset) GetName() string {
+	return s.Name
+}
+
+// daemonset
+
+type daemonset appsv1.DaemonSet
+
+func (d daemonset) GetCreation() time.Time {
+	return d.CreationTimestamp.Time
+}
+
+func (d daemonset) GetName() string {
+	return d.Name
+}

@@ -243,8 +243,9 @@ func (p *pod) GetPodNumberNp(ctx *gin.Context) {
 			"msg":  "获取namespace->pod->count 失败",
 			"data": data,
 		})
+		return
 	}
-	return
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"msg":  "获取namespace下pod数量成功",
 		"data": data,

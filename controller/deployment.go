@@ -191,7 +191,7 @@ func (d *deployment) UpdateDeployment(ctx *gin.Context) {
 
 }
 
-// 获取pod列表，支持分页，过滤，排序
+// 获取deployment列表，支持分页，过滤，排序
 func (d *deployment) GetDeployments(ctx *gin.Context) {
 
 	//	处理入参
@@ -227,9 +227,9 @@ func (d *deployment) GetDeployments(ctx *gin.Context) {
 	})
 }
 
-// 获取pod详情
+// 获取deployment详情
 
-func (p *pod) GetDeploymentDetail(ctx *gin.Context) {
+func (d *deployment) GetDeploymentDetail(ctx *gin.Context) {
 
 	//	处理入参
 	//	构造匿名结构体,用于判断传入的参数
@@ -262,4 +262,29 @@ func (p *pod) GetDeploymentDetail(ctx *gin.Context) {
 		"msg":  "获取pod详情成功",
 		"data": deployment,
 	})
+}
+
+// 获取每个namespace下的pod数量
+
+func (d *deployment) GetDeploymentNumberNp(ctx *gin.Context) {
+
+	// 无参
+	//params := new(struct{})
+	data, err := service.Deployment.GetDeploymentNumberNp()
+
+	fmt.Println(data)
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"msg":  "获取namespace->deployment->count 失败",
+			"data": nil,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg":  "获取每个namespace下deployment数量成功",
+		"data": data,
+	})
+
 }

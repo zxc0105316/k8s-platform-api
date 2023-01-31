@@ -27,5 +27,10 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		GET("/api/k8s/pod/detail", Pod.GetPodDetail).
 		GET("/api/k8s/pod/ContainerList", Pod.GetPodContainer).
 		GET("/api/k8s/pod/NumberNp", Pod.GetPodNumberNp).
-		GET("/api/k8s/pod/pod", Pod.GetPods)
+		GET("/api/k8s/pod/podLists", Pod.GetPods).
+		POST("/api/k8s/deployment/delete", Deployment.DelDeployment).
+		POST("/api/k8s/deployment/update", Deployment.UpdateDeployment).
+		GET("/api/k8s/deployment/detail", Deployment.GetDeploymentDetail).
+		GET("/api/k8s/deployment/NumberNp", Deployment.GetDeploymentNumberNp).
+		GET("/api/k8s/deployment/deploymentLists", Deployment.GetDeployments)
 }
