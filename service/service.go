@@ -101,7 +101,7 @@ func (s *service) DelService(ServiceName, Namespace string) (err error) {
 	return nil
 }
 
-// 类型转换的方法   corev1.Service -> DataCell , DataCell ->  corev1.Service
+// 类型转换的方法   corev1.service -> DataCell , DataCell ->  corev1.service
 
 func (s *service) toCells(services []corev1.Service) []DataCell {
 
@@ -113,7 +113,7 @@ func (s *service) toCells(services []corev1.Service) []DataCell {
 	return cells
 }
 
-// DataCell -> corev1.Service
+// DataCell -> corev1.service
 
 func (s *service) fromCells(cells []DataCell) []corev1.Service {
 	services := make([]corev1.Service, len(cells))

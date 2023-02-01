@@ -160,3 +160,78 @@ func (i *ingress) UpdateIngresses(IngressName, namespace, Content string) error 
 	return nil
 
 }
+
+// 定义列表的返回内容,total是元素数量,Items是service元素列表
+type IngressesResp struct {
+	Total int            `json:"total"`
+	Items []nwv1.Ingress `json:"items"`
+}
+
+// 获取service列表，支持过滤，排序和分页
+
+func (i *ingress) GetIngresses(filterName, namespace string, limit, page int) (data *IngressesResp, err error) {
+	// context.TODO() 用于声明一个空的上下文，用于List方法内设置这个请求的超时;具体看源码，源码这里配置是为了定义一个超时时间
+	// metav1.ListOption 用于过滤List数据，如使用 label , field 等
+	IngressesList, err := K8s.ClientSet.NetworkingV1().Ingresses(namespace).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		// 打日志给自己看，排错使用
+		logger.Error("获取Ingresses列表失败," + err.Error())
+		// 返回给上一层，最终返回给前端，前端打印出这个error
+		return nil, errors.New("获取Ingresses列表失败," + err.Error())
+	}
+
+	//实例化dataSelector结构体,组装数据
+
+	selectableData := &dataSelector{
+
+		GenericDatalist: i.toCells(IngressesList.Items),
+		DataSelect: &DataSelectQuery{
+			Filter: &FilterQuery{
+				Name: filterName,
+			},
+			Paginate: &PaginateQuery{
+				Limit: limit,
+				Page:  page,
+			},
+		},
+	}
+	// 先过滤
+	filtered := selectableData.Filter()
+	total := len(filtered.GenericDatalist)
+
+	// 排序和分页
+	dataList := filtered.Sort().Paginate()
+
+	//将DataCell类型转换
+
+	Ingresses := i.fromCells(dataList.GenericDatalist)
+
+	return &IngressesResp{
+		Total: total,
+		Items: Ingresses,
+	}, nil
+
+}
+
+// 类型转换的方法   nwv1.ingress -> DataCell , DataCell ->  nwv1.ingress
+
+func (i *ingress) toCells(Ingresses []nwv1.Ingress) []DataCell {
+
+	cells := make([]DataCell, len(Ingresses))
+
+	for i := range Ingresses {
+		cells[i] = ingressCell(Ingresses[i])
+	}
+	return cells
+}
+
+// DataCell -> nwv1.ingress
+
+func (i *ingress) fromCells(cells []DataCell) []nwv1.Ingress {
+	ingresses := make([]nwv1.Ingress, len(cells))
+	for i := range cells {
+		// 这里用断言反转换
+		ingresses[i] = nwv1.Ingress(cells[i].(ingressCell))
+	}
+	return ingresses
+}
