@@ -28,7 +28,7 @@ type DeployCreate struct {
 	Memory        string            `json:"memory"`
 	ContainerPort int32             `json:"container_port"`
 	HealthCheck   bool              `json:"health_check"`
-	HealthPath    string            `json:"health_pathe"`
+	HealthPath    string            `json:"health_path"`
 }
 
 // 定义列表的返回内容,total是元素数量,Items是pod元素列表

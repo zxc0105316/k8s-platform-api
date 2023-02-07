@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
+	"k8s-platform-api/service"
 	"net/http"
 )
 
@@ -258,7 +259,7 @@ func (d *deployment) GetDeploymentDetail(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 
-		"msg":  "获取pod详情成功",
+		"msg":  "获取deployment详情成功",
 		"data": deployment,
 	})
 }

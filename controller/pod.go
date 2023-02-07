@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
+	"k8s-platform-api/service"
 	"net/http"
 )
 
